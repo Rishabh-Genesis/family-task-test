@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Task = Domain.DataModels.Task;
 
 namespace WebApi.AutoMapper
 {
@@ -16,6 +17,8 @@ namespace WebApi.AutoMapper
             CreateMap<CreateMemberCommand, Member>();
             CreateMap<UpdateMemberCommand, Member>();
             CreateMap<Member, MemberVm>();
+            CreateMap<CreateTaskCommand, Domain.DataModels.Task>();//Todo: putt it at right place
+            CreateMap<Task, TaskVm>();
         }
     }
 }

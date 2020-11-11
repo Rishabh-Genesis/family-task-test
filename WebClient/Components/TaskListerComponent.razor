@@ -49,8 +49,8 @@
     {
         <div class="task-item p-3 my-3 row m-0">
             <div class="col-10 p-0">
-                <Check TValue="bool" Checked="@item.IsDone" CheckedChanged="@(val => ToggleTask(item))">
-                    <span class="@(item.IsDone ? "done-text" : "")">@item.Text</span>
+                <Check TValue="bool" Checked="@item.IsComplete" CheckedChanged="@(val => ToggleTask(item))">
+                    <span class="@(item.IsComplete ? "done-text" : "")">@item.Subject</span>
                 </Check>
             </div>
             <div class="col-2 p-0 d-flex justify-content-end align-items-center">
@@ -64,7 +64,7 @@
 </div>
 
 @code  {
-    private List<TaskModel> tasks = new List<TaskModel>();
+    private List<TaskVm> tasks = new List<TaskVm>();
     private MemberVm selectedMember;
 
     protected override Task OnInitializedAsync()
@@ -97,12 +97,12 @@
 
         if (selectedMember == null || selectedMember.Id == Guid.Empty)
         {
-            tasks = taskService.Tasks;
+            //tasks = taskService.Tasks; TODO: Need to check the error
             StateHasChanged();
             return;
         };
 
-        tasks = taskService.Tasks.Where(t => t.Member == selectedMember.Id).ToList();
+        tasks =  taskService.GetAllTask(selectedMember).Result;
         StateHasChanged();
     }
 

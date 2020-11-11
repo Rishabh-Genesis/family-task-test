@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebClient.Shared.Models;
@@ -21,6 +22,7 @@ namespace WebClient.Abstractions
 
         void SelectTask(Guid id);
         void ToggleTask(Guid id);
-        void AddTask(TaskModel model);
+        void AddTask(TaskVm model);
+        Task<List<TaskVm>> GetAllTask(MemberVm memberVm);
     }
 }

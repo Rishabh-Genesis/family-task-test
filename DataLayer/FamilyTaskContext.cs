@@ -13,7 +13,8 @@ namespace DataLayer
 
         }
 
-        public DbSet<Member> Members { get; set; }
+        public DbSet<Member> Member { get; set; }
+        public DbSet<Task> Task { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +23,10 @@ namespace DataLayer
             modelBuilder.Entity<Member>(entity => {
                 entity.HasKey(k => k.Id);
                 entity.ToTable("Member");
+            });
+            modelBuilder.Entity<Task>(entity => {
+                entity.HasKey(k => k.Id);
+                entity.ToTable("Task");
             });
         }
     }
