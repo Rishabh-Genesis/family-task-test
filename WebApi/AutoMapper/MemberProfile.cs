@@ -16,6 +16,7 @@ namespace WebApi.AutoMapper
         {
             CreateMap<CreateMemberCommand, Member>();
             CreateMap<UpdateMemberCommand, Member>();
+            CreateMap<UpdateTaskCommand, Task>();
             CreateMap<Member, MemberVm>();
             CreateMap<CreateTaskCommand, Domain.DataModels.Task>();//Todo: putt it at right place
             CreateMap<Task, TaskVm>();

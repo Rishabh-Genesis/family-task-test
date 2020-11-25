@@ -110,5 +110,9 @@ namespace WebClient.Services
             SelectedMember = null;
             SelectedMemberChanged?.Invoke(this, null);
         }
+
+        public MemberVm GetMemberByMemberId(Guid? memberId) {
+            return Members.FirstOrDefault(m => m.Id == memberId);
+        }
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.ViewModel
+namespace Domain.Commands
 {
-    public class TaskVm
+    public class UpdateTaskCommand
     {
         public Guid Id { get; set; }
         public Guid? AssignedToId { get; set; }

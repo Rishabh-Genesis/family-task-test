@@ -66,11 +66,13 @@
         };
 
         newTask = string.Empty;
-
-        if (memberService.SelectedMember != null)
-        {
-            task.AssignedToId = memberService.SelectedMember.Id;
+        try {
+            if (memberService.SelectedMember != null)
+            {
+                task.AssignedToId = memberService.SelectedMember.Id;
+            }
         }
+        catch (Exception e) { }
         taskDataService.AddTask(task);
         StateHasChanged();
     }

@@ -10,6 +10,8 @@ namespace Core.Abstractions.Services
     public interface ITaskService
     {
         Task<CreateTaskCommandResult> CreateTaskCommandHandler(CreateTaskCommand command);
-        Task<GetAllTasksQueryResult> GetAllTasksQueryHandler(Guid memberId);
+        Task<UpdateTaskCommandResult> UpdateTaskCommandHandler(UpdateTaskCommand command);
+        Task<GetAllTasksQueryResult> GetAllTasksQueryHandler();
+        Task<GetAllTasksQueryResult> GetAllTasksByMemberQueryHandler(Guid memberId);
     }
 }

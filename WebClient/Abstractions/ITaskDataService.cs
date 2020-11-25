@@ -1,4 +1,5 @@
-﻿using Domain.ViewModel;
+﻿using Domain.Queries;
+using Domain.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,15 +15,17 @@ namespace WebClient.Abstractions
     /// </summary>
     public interface ITaskDataService
     {
-        List<TaskModel> Tasks { get; }
+        List<TaskVm> Tasks { get; }
         TaskModel SelectedTask { get; }
 
         event EventHandler TasksUpdated;
         event EventHandler TaskSelected;
 
         void SelectTask(Guid id);
-        void ToggleTask(Guid id);
+        Task ToggleTask(Guid id);
         void AddTask(TaskVm model);
-        Task<List<TaskVm>> GetAllTask(MemberVm memberVm);
+        Task<GetAllTasksByMemberQueryResult> GetAllTaskByMember(MemberVm memberVm);
+        Task<GetAllTasksQueryResult> GetAllTask();
+
     }
 }

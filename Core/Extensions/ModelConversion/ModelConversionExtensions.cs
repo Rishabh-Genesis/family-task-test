@@ -54,7 +54,18 @@ namespace Core.Extensions.ModelConversion
             var command = new CreateTaskCommand()
             {
                 AssignedToId = model.AssignedToId,
-                IsCompleted = model.IsComplete,
+                IsComplete = model.IsComplete,
+                Subject = model.Subject
+            };
+            return command;
+        }
+        public static UpdateTaskCommand ToUpdateTaskCommand(this TaskVm model)
+        {
+            var command = new UpdateTaskCommand()
+            {
+                Id = model.Id,
+                AssignedToId = model.AssignedToId,
+                IsComplete = model.IsComplete,
                 Subject = model.Subject
             };
             return command;

@@ -19,13 +19,13 @@ namespace WebClient.Services
         public TaskDataService(IHttpClientFactory clientFactory)
         {
             httpClient = clientFactory.CreateClient("FamilyTaskAPI");
-            Tasks = new List<TaskModel>();
+            tasks = new List<TaskVm>();
         }
 
 
 
-
-        public List<TaskModel> Tasks { get; private set; }
+        private List<TaskVm> tasks;
+        public List<TaskVm> Tasks => tasks;
         public TaskModel SelectedTask { get; private set; }
 
 
@@ -34,17 +34,18 @@ namespace WebClient.Services
 
         public void SelectTask(Guid id)
         {
-            SelectedTask = Tasks.SingleOrDefault(t => t.Id == id);
+            //SelectedTask = Tasks.SingleOrDefault(t => t.Id == id);
             TasksUpdated?.Invoke(this, null);
         }
 
-        public void ToggleTask(Guid id)
+        public async Task ToggleTask(Guid id)
         {
-            foreach (var taskModel in Tasks)
+            foreach (var taskModel in tasks)
             {
                 if (taskModel.Id == id)
                 {
                     taskModel.IsComplete = !taskModel.IsComplete;
+                    await UpdateTask(taskModel);
                 }
             }
 
@@ -58,7 +59,15 @@ namespace WebClient.Services
             if (result != null) {
                 TasksUpdated?.Invoke(this, null);
             }
-            
+        }
+
+        public async Task UpdateTask(TaskVm model) 
+        {
+            var result = await Update(ModelConversionExtensions.ToUpdateTaskCommand(model));
+            if (result != null)
+            {
+                TasksUpdated?.Invoke(this, null);
+            }
         }
 
         public async Task<CreateTaskCommandResult> Create(CreateTaskCommand command) {
@@ -70,14 +79,31 @@ namespace WebClient.Services
                 return null;
             }
         }
-
-        public async Task<List<TaskVm>> GetAllTask(MemberVm memberVm)
+        public async Task<UpdateTaskCommandResult> Update(UpdateTaskCommand command)
         {
-            return  (await httpClient.GetJsonAsync<GetAllTasksQueryResult>("https://localhost:5001/api/Task/GetAll/" + memberVm.Id)).Payload;
+            try
+            {
+                var result =  await httpClient.PutJsonAsync<UpdateTaskCommandResult>("https://localhost:5001/api/Task/UpdateTask/"+command.Id, command);//Todo : put the url at appropriate place 
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
-        //public async Task<GetAllTasksQueryResult> GetAllTask() { 
-        // return await httpClient.PostJsonAsync<CreateTaskCommandResult>("https://localhost:5001/api/Task/GetAll/"+);
-        //}
+        public async Task<GetAllTasksByMemberQueryResult> GetAllTaskByMember(MemberVm memberVm)
+        {
+             var result  = await httpClient.GetJsonAsync<GetAllTasksByMemberQueryResult>("https://localhost:5001/api/Task/GetAllTask/memberId="+ memberVm.Id);
+            tasks = result.Payload;
+            return result;
+        }
+
+        public async Task<GetAllTasksQueryResult> GetAllTask()
+        {
+            var result = await httpClient.GetJsonAsync<GetAllTasksQueryResult>("https://localhost:5001/api/Task/GetAllTask");
+            tasks = result.Payload;
+            return result;
+        }
     }
 }

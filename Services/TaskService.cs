@@ -32,15 +32,62 @@ namespace Services
                 Payload = vm
             };
         }
+        public async Task<UpdateTaskCommandResult> UpdateTaskCommandHandler(UpdateTaskCommand command)
+        {
+            var isSucceed = true;
+            var task = await _taskRepository.ByIdAsync(command.Id);
 
-        public async Task<GetAllTasksQueryResult> GetAllTasksQueryHandler(Guid memberId)
+            _mapper.Map<UpdateTaskCommand,Domain.DataModels.Task>(command,task);
+            var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
+
+            if (affectedRecordsCount < 1)
+                isSucceed = false;
+
+            return new UpdateTaskCommandResult()
+            {
+                Succeed = isSucceed
+            };
+        }
+
+        public async Task<GetAllTasksQueryResult> GetAllTasksByMemberQueryHandler(Guid memberId)
+        {
+            List<TaskVm> vm = new List<TaskVm>();
+            
+            try
+            {
+                var tasks = await _taskRepository.ToListAsync(); //TODO: reset method not working here
+
+            
+            if (tasks != null && tasks.Any())
+                vm = _mapper.Map<List<TaskVm>>(tasks.Where(t=>t.AssignedToId == memberId));
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return new GetAllTasksQueryResult()
+            {
+                Payload = vm
+            };
+        }
+
+        public async Task<GetAllTasksQueryResult> GetAllTasksQueryHandler()
         {
             List<TaskVm> vm = new List<TaskVm>();
 
-            var tasks = await _taskRepository.Reset().ToListAsync();
+            try
+            {
+                var tasks = await _taskRepository.ToListAsync(); //TODO: reset method not working here
 
-            if (tasks != null && tasks.Any())
-                vm = _mapper.Map<List<TaskVm>>(tasks.Where(t=>t.AssignedToId == memberId));
+
+                if (tasks != null && tasks.Any())
+                    vm = _mapper.Map<List<TaskVm>>(tasks);
+            }
+            catch (Exception e)
+            {
+
+            }
 
             return new GetAllTasksQueryResult()
             {

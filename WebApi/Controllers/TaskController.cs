@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core;
 using Core.Abstractions.Services;
 using Domain.Commands;
 using Domain.Queries;
@@ -33,16 +34,46 @@ namespace WebApi.Controllers
 
             var result = await _taskService.CreateTaskCommandHandler(command);
 
-            return  result;
+            return result;
         }
-        [HttpGet]
-        [ProducesResponseType(typeof(GetAllTasksQueryResult), StatusCodes.Status200OK)]
-        [Route("GetAllTask/{id}")]
-        public async Task<IActionResult> GetAllTaskByMemberId(Guid memberId)
+
+        [HttpGet("GetAllTask/memberId={memberId}")]
+        [ProducesResponseType(typeof(GetAllTasksByMemberQueryResult), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllTaskByMemberId(Guid? memberId)
         {
-            var result = await _taskService.GetAllTasksQueryHandler(memberId);
+            var result = await _taskService.GetAllTasksByMemberQueryHandler((Guid)memberId);
 
             return Ok(result);
+        }
+
+        [HttpGet("GetAllTask")]
+        [ProducesResponseType(typeof(GetAllTasksQueryResult), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllTask()
+        {
+            var result = await _taskService.GetAllTasksQueryHandler();
+
+            return Ok(result);
+        }
+
+        [HttpPut("UpdateTask/{id}")]
+        [ProducesResponseType(typeof(UpdateTaskCommandResult), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Update(Guid id, UpdateTaskCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await _taskService.UpdateTaskCommandHandler(command);
+
+                return Ok(result);
+            }
+            catch (NotFoundException<Guid>)
+            {
+                return NotFound();
+            }
         }
     }
 }
