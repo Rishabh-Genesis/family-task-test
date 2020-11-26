@@ -4,6 +4,7 @@
 @namespace WebClient.Shared.Components
 
 @inject WebClient.Abstractions.IMemberDataService memberService
+@inject WebClient.Abstractions.ITaskDataService taskService
 <style>
     .menu-wrapper {
         background: #FBFBFB;
@@ -74,7 +75,7 @@
     {
         @foreach (var item in MenuItems)
         {
-            <div class="menu-item col-10 offset-1 p-3 my-4 p-sm-2 @(item.isActive ? "active" : "")" @onclick="@(e => SelectMember(item.referenceId))">
+            <div class="menu-item col-10 drop-child offset-1 p-3 my-4 p-sm-2 @(item.isActive ? "active" : "")" id="@item.referenceId" @onclick="@(e => SelectMember(item.referenceId))" ondrop="drop_handler(event)" ondragover="dragover_handler(event)">
                 @if (item.iconColor != null)
                 {
                     <div class="avtar mr-3" style="background-color: @(item.iconColor);"> </div>
@@ -90,6 +91,7 @@
 </div>
 
 @code {
+    private static Action<Guid> action;
     protected override Task OnInitializedAsync()
     {
         MenuItems = memberService.Members.ToMenuItems();
@@ -116,6 +118,7 @@
     {
         MenuItems = memberService.Members.ToMenuItems();
         StateHasChanged();
+        action = AssignTaskToMember;
     }
 
     [Parameter] public MenuItem[] MenuItems {get; set;}
@@ -151,5 +154,15 @@
 
     private void OnAllTask() {
         memberService.SelectNullMember();
+        var temp = typeof(LeftMenu).Assembly.FullName;
+    }
+
+    [JSInvokable("AssignTask")]
+    public static void AssignTask(Guid id) {
+        action.Invoke(id);
+    }
+
+    private void AssignTaskToMember(Guid id) {
+        taskService.AssignTaskToMember(id);
     }
 }

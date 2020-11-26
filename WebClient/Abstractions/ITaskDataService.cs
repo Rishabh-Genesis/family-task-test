@@ -16,7 +16,7 @@ namespace WebClient.Abstractions
     public interface ITaskDataService
     {
         List<TaskVm> Tasks { get; }
-        TaskModel SelectedTask { get; }
+        TaskVm SelectedTask { get; }
 
         event EventHandler TasksUpdated;
         event EventHandler TaskSelected;
@@ -26,6 +26,7 @@ namespace WebClient.Abstractions
         void AddTask(TaskVm model);
         Task<GetAllTasksByMemberQueryResult> GetAllTaskByMember(MemberVm memberVm);
         Task<GetAllTasksQueryResult> GetAllTask();
+        void AssignTaskToMember(Guid memberId);
 
     }
 }

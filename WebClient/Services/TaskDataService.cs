@@ -26,17 +26,17 @@ namespace WebClient.Services
 
         private List<TaskVm> tasks;
         public List<TaskVm> Tasks => tasks;
-        public TaskModel SelectedTask { get; private set; }
+        public TaskVm SelectedTask { get; private set; }
 
 
         public event EventHandler TasksUpdated;
         public event EventHandler TaskSelected;
 
-        public void SelectTask(Guid id)
-        {
-            //SelectedTask = Tasks.SingleOrDefault(t => t.Id == id);
-            TasksUpdated?.Invoke(this, null);
-        }
+        //public void SelectTask(Guid id)
+        //{
+        //    //SelectedTask = Tasks.SingleOrDefault(t => t.Id == id);
+        //    TasksUpdated?.Invoke(this, null);
+        //}
 
         public async Task ToggleTask(Guid id)
         {
@@ -104,6 +104,20 @@ namespace WebClient.Services
             var result = await httpClient.GetJsonAsync<GetAllTasksQueryResult>("https://localhost:5001/api/Task/GetAllTask");
             tasks = result.Payload;
             return result;
+        }
+
+        public void SelectTask(Guid taskId) {
+            if (Tasks.All(taskVm => taskVm.Id != taskId)) return;
+            {
+                SelectedTask = Tasks.SingleOrDefault(taskVm => taskVm.Id == taskId);
+            }
+        }
+
+        public void AssignTaskToMember(Guid memberId)
+        {
+            SelectedTask.AssignedToId = memberId;
+            UpdateTask(SelectedTask);
+            SelectedTask = null;
         }
     }
 }
