@@ -26,7 +26,7 @@ namespace WebClient.Abstractions
         void AddTask(TaskVm model);
         Task<GetAllTasksByMemberQueryResult> GetAllTaskByMember(MemberVm memberVm);
         Task<GetAllTasksQueryResult> GetAllTask();
-        void AssignTaskToMember(Guid memberId);
+        Task AssignTaskToMember(Guid memberId);
 
     }
 }

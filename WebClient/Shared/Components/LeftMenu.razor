@@ -154,7 +154,6 @@
 
     private void OnAllTask() {
         memberService.SelectNullMember();
-        var temp = typeof(LeftMenu).Assembly.FullName;
     }
 
     [JSInvokable("AssignTask")]
@@ -162,7 +161,7 @@
         action.Invoke(id);
     }
 
-    private void AssignTaskToMember(Guid id) {
-        taskService.AssignTaskToMember(id);
+    private  void  AssignTaskToMember(Guid id) {
+         taskService.AssignTaskToMember(id);
     }
 }

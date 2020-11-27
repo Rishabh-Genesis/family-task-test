@@ -55,9 +55,8 @@
                 </Check>
             </div>
             <div class="col-2 p-0 d-flex justify-content-end align-items-center">
-                @if (item.AssignedToId != null || selectedMember != null)//Todo:check this condition
+                @if (item.AssignedToId != null || selectedMember != null)
                 {
-                    @*<div class="avtar mr-1" style="background-color: @selectedMember.Avatar;"></div>*@
                 <div class="avtar mr-1" style="background-color: @(selectedMember!= null ? selectedMember.Avatar:memberService.GetMemberByMemberId(item.AssignedToId).Avatar);"></div>
                 }
                 <img class="delete-icon" src="/assets/images/delete-icon.svg" />
@@ -100,8 +99,6 @@
 
         if (selectedMember == null || selectedMember.Id == Guid.Empty)
         {
-            //tasks = taskService.Tasks; //TODO: Need to check the error
-            //StateHasChanged();
             tasks = (await taskService.GetAllTask()).Payload;
             StateHasChanged();
             return;

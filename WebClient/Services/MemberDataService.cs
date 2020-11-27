@@ -42,7 +42,7 @@ namespace WebClient.Services
 
         private async Task<CreateMemberCommandResult> Create(CreateMemberCommand command)
         {            
-            return await httpClient.PostJsonAsync<CreateMemberCommandResult>("https://localhost:5001/api/Members", command); //Todo: made changes here need to undo it .
+            return await httpClient.PostJsonAsync<CreateMemberCommandResult>("members", command); 
         }
 
         private async Task<GetAllMembersQueryResult> GetAllMembers()
