@@ -23,9 +23,9 @@ namespace Services
         }
         public async Task<CreateTaskCommandResult> CreateTaskCommandHandler(CreateTaskCommand command)
         {
-           var task = _mapper.Map<Domain.DataModels.Task>(command);
-           var createdTask = await _taskRepository.CreateRecordAsync(task);
-           var vm = _mapper.Map<TaskVm>(createdTask);
+            var task = _mapper.Map<Domain.DataModels.Task>(command);
+            var createdTask = await _taskRepository.CreateRecordAsync(task);
+            var vm = _mapper.Map<TaskVm>(createdTask);
 
             return new CreateTaskCommandResult()
             {
@@ -37,7 +37,7 @@ namespace Services
             var isSucceed = true;
             var task = await _taskRepository.ByIdAsync(command.Id);
 
-            _mapper.Map<UpdateTaskCommand,Domain.DataModels.Task>(command,task);
+            _mapper.Map<UpdateTaskCommand, Domain.DataModels.Task>(command, task);
             var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
 
             if (affectedRecordsCount < 1)
@@ -52,19 +52,11 @@ namespace Services
         public async Task<GetAllTasksQueryResult> GetAllTasksByMemberQueryHandler(Guid memberId)
         {
             List<TaskVm> vm = new List<TaskVm>();
-            
-            try
-            {
-                var tasks = await _taskRepository.ToListAsync(); //TODO: reset method not working here
+            var tasks = await _taskRepository.ToListAsync();
 
-            
+
             if (tasks != null && tasks.Any())
-                vm = _mapper.Map<List<TaskVm>>(tasks.Where(t=>t.AssignedToId == memberId));
-            }
-            catch (Exception e)
-            {
-
-            }
+                vm = _mapper.Map<List<TaskVm>>(tasks.Where(t => t.AssignedToId == memberId));
 
             return new GetAllTasksQueryResult()
             {
@@ -75,19 +67,10 @@ namespace Services
         public async Task<GetAllTasksQueryResult> GetAllTasksQueryHandler()
         {
             List<TaskVm> vm = new List<TaskVm>();
+            var tasks = await _taskRepository.ToListAsync();
 
-            try
-            {
-                var tasks = await _taskRepository.ToListAsync(); //TODO: reset method not working here
-
-
-                if (tasks != null && tasks.Any())
-                    vm = _mapper.Map<List<TaskVm>>(tasks);
-            }
-            catch (Exception e)
-            {
-
-            }
+            if (tasks != null && tasks.Any())
+                vm = _mapper.Map<List<TaskVm>>(tasks);
 
             return new GetAllTasksQueryResult()
             {

@@ -48,6 +48,12 @@
         height: 32px;
         border-radius: 50%;
     }
+    .menu-style {
+        position: fixed;
+        height: calc(100vh - 80px);
+        width: 350px;
+        top: 80px;
+    }
 
     @@media(max-width: 1400px) {
         .menu-wrapper .label {
@@ -67,7 +73,7 @@
     }
 </style>
 
-<div class="menu-wrapper col-12 p-0">
+<div class="menu-wrapper col-12 p-0 menu-style">
     <div class="add-menu-item label col-10 offset-1 p-3 my-4 p-sm-2" @onclick="@OnAllTask">
         <span class="fa fa-plus"></span> &nbsp; All Tasks
     </div>
